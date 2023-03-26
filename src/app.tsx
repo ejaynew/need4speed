@@ -3,7 +3,10 @@ import './app.css';
 import { WelcomeMessage } from './components/welcome-message';
 
 function App() {
-    const [message, setMessage] = useState('Hello! How can I help you today?');
+    const [messages, setMessages] = useState([
+        'Hello! How can I help you today?',
+    ]);
+    const [previousInputs, setPreviousInputs] = useState<string[]>([]);
     const [userInput, setUserInput] = useState('');
     const parentMessageId = useRef();
 
@@ -12,7 +15,16 @@ function App() {
             <WelcomeMessage />
             <div className="container" id="chat-output">
                 <div id="chat-message">
-                    <p>{message}</p>
+                    {messages.map((msg, idx) => {
+                        return (
+                            <>
+                                <p>{msg}</p>
+                                {idx < previousInputs.length && (
+                                    <p>{previousInputs[idx]}</p>
+                                )}
+                            </>
+                        );
+                    })}
                 </div>
             </div>
 
@@ -34,6 +46,9 @@ function App() {
                         onClick={(event) => {
                             event.preventDefault();
                             console.log('test', userInput);
+                            setPreviousInputs((previousInputs) => {
+                                return [...previousInputs, userInput];
+                            });
                             // Send the text to the API endpoint
                             fetch('http://localhost:3000', {
                                 method: 'POST',
@@ -50,7 +65,9 @@ function App() {
                                     if (data.id) {
                                         parentMessageId.current = data.id;
                                     }
-                                    setMessage(data.reply);
+                                    setMessages((msg) => {
+                                        return [...msg, data.reply];
+                                    });
                                 })
                                 .catch((error) => {
                                     alert(
