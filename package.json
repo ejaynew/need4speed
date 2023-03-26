@@ -11,7 +11,8 @@
         "dev": "PORT=8080 react-scripts start",
         "watch": "npm-watch",
         "server": "node server.mjs",
-        "start": "concurrently \"npm run server\" \"npm run watch\""
+        "start": "concurrently \"npm run server\" \"npm run watch\"",
+        "web": "concurrently \"npm run server\" \"npm run dev\""
     },
     "watch": {
         "build": {
