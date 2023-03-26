@@ -1,0 +1,8 @@
+#chat-output {
+    background-color: lightgray;
+    padding: 10px;
+}
+
+#chat-message {
+    max-height: 500px;
+}

@@ -1,33 +1,65 @@
-// @ts-nocheck
+import React, { useState } from 'react';
+import './App.css';
+import { WelcomeMessage } from './components/welcome-message';
 
-const form = document.getElementById("chat-form");
-const input = document.getElementById("user-message");
-const output = document.getElementById("chat-output");
-const API_KEY = process.env.API_KEY;
+function App() {
+    const [message, setMessage] = useState('Hello! How can I help you today?');
+    const [userInput, setUserInput] = useState('');
 
-form.addEventListener("submit", async (event) => {
-  console.log(input.value);
-  event.preventDefault();
-  const prompt = input.value;
+    return (
+        <>
+            <WelcomeMessage />
+            <div className="container" id="chat-output">
+                <div id="chat-message">
+                    <p>{message}</p>
+                </div>
+            </div>
 
-  // Send the text to the API endpoint
-  fetch("http://localhost:3000", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ message: prompt || "" }),
-  })
-    .then((response) => response.json())
-    .then(async (data) => {
-      output.innerHTML += `<p>${prompt}</p><p>${data.reply}</p>`;
-      input.value = "";
-      output.innerHTML += `<p>User: ${prompt}</p><p>Chat: ${data}</p>`;
-    })
-    .catch((error) => {
-      alert(
-        "Error. Make sure you're running the server by following the instructions on https://github.com/gragland/chatgpt-chrome-extension. Also make sure you don't have an adblocker preventing requests to localhost:3000."
-      );
-      throw new Error(error);
-    });
-});
+            <div className="container">
+                <form id="chat-form">
+                    <label htmlFor="user-message">Message: </label>
+                    <input
+                        type="text"
+                        id="user-message"
+                        name="user-message"
+                        placeholder="Type your message here..."
+                        value={userInput}
+                        onChange={(event) => {
+                            setUserInput(event.target.value);
+                        }}
+                    />
+                    <br />
+                    <button
+                        onClick={(event) => {
+                            event.preventDefault();
+                            console.log('test', userInput);
+                            // Send the text to the API endpoint
+                            fetch('http://localhost:3000', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ message: userInput }),
+                            })
+                                .then((response) => response.json())
+                                .then(async (data) => {
+                                    console.log(data);
+                                    setMessage(data.reply);
+                                })
+                                .catch((error) => {
+                                    alert(
+                                        "Error. Make sure you're running the server by following the instructions on https://github.com/gragland/chatgpt-chrome-extension. Also make sure you don't have an adblocker preventing requests to localhost:3000."
+                                    );
+                                    throw new Error(error);
+                                });
+                        }}
+                    >
+                        Send
+                    </button>
+                </form>
+            </div>
+        </>
+    );
+}
+
+export default App;
