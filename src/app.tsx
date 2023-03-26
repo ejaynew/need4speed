@@ -1,10 +1,12 @@
 import React, { useRef, useState } from 'react';
 import './app.css';
 import { WelcomeMessage } from './components/welcome-message';
+import Container from 'react-bootstrap/Container';
+import Button from 'react-bootstrap/Button';
 
 function App() {
     const [messages, setMessages] = useState([
-        'Hello! How can I help you today?',
+        "Hello! I'm here to help you write your user journeys. Please answer a few questions to get started.\n\n\n\nFirst of all, what type of client is the user journey for?",
     ]);
     const [previousInputs, setPreviousInputs] = useState<string[]>([]);
     const [userInput, setUserInput] = useState('');
@@ -13,24 +15,40 @@ function App() {
     return (
         <>
             <WelcomeMessage />
-            <div className="container" id="chat-output">
+            <Container className="container" id="chat-output">
                 <div id="chat-message">
                     {messages.map((msg, idx) => {
                         return (
                             <React.Fragment key={`conv-${idx}`}>
-                                <p>Assistant: {msg}</p>
+                                <div className="d-flex flex-row justify-content-start mb-4">
+                                    <img
+                                        id="iconbot"
+                                        className="col-md"
+                                        src="iconbot.png"
+                                    ></img>
+                                    <div className="col-md assistant-message-wrapper">
+                                        <p className="assistant-message">
+                                            Assistant: {msg}
+                                        </p>
+                                    </div>
+                                </div>
                                 {idx < previousInputs.length && (
-                                    <p>You: {previousInputs[idx]}</p>
+                                    <div className="user-message-wrapper">
+                                        <div className="row">
+                                            <p className="col-md user-message">
+                                                You: {previousInputs[idx]}
+                                            </p>
+                                        </div>
+                                    </div>
                                 )}
                             </React.Fragment>
                         );
                     })}
                 </div>
-            </div>
+            </Container>
 
-            <div className="container">
+            <div className="d-flex flex-row">
                 <form id="chat-form">
-                    <label htmlFor="user-message">Message: </label>
                     <input
                         type="text"
                         id="user-message"
@@ -41,8 +59,8 @@ function App() {
                             setUserInput(event.target.value);
                         }}
                     />
-                    <br />
-                    <button
+                    <Button
+                        className="btn btn-info"
                         onClick={(event) => {
                             event.preventDefault();
                             console.log('test', userInput);
@@ -78,7 +96,7 @@ function App() {
                         }}
                     >
                         Send
-                    </button>
+                    </Button>
                 </form>
             </div>
         </>

@@ -1,6 +1,9 @@
 #chat-output {
-    background-color: lightgray;
+    background-color: #eeeeee;
     padding: 10px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    overflow-wrap: break-word;
 }
 
 #chat-message {
