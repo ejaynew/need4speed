@@ -4,11 +4,13 @@
   "description": "\"# need4speed\"",
   "main": "app.js",
   "scripts": {
-    "watch": "webpack --config webpack/webpack.dev.js --watch",
     "build": "webpack --config webpack/webpack.prod.js",
     "clean": "rimraf dist",
     "style": "prettier --write \"src/**/*.{ts,tsx}\"",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "dev": "webpack --config webpack/webpack.dev.js --watch",
+    "server": "node server.mjs",
+    "start": "concurrently \"npm run server\" \"npm run watch\""
   },
   "repository": {
     "type": "git",
@@ -16,7 +18,14 @@
   },
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.20.1",
+    "chatgpt": "^5.1.2",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
+    "dotenv-safe": "^8.2.0",
+    "express": "^4.18.2",
+    "node-fetch": "^3.3.0",
+    "ora": "^6.1.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   },
@@ -24,6 +33,7 @@
     "@types/chrome": "0.0.158",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "concurrently": "^7.6.0",
     "copy-webpack-plugin": "^9.0.1",
     "dotenv-webpack": "^8.0.1",
     "husky": "^8.0.3",
