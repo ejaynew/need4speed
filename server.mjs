@@ -16,28 +16,15 @@ const gptApi = new ChatGPTAPI({
 const Config = configure(config);
 
 class Conversation {
-    conversationID = null;
-    parentMessageID = null;
-
-    constructor() {}
-
-    async sendMessage(msg) {
+    async sendMessage(msg, parentMessageId) {
         const res = await gptApi.sendMessage(
             msg,
-            this.conversationID && this.parentMessageID
+            parentMessageId
                 ? {
-                      conversationId: this.conversationID,
-                      parentMessageId: this.parentMessageID,
+                      parentMessageId,
                   }
                 : {}
         );
-
-        if (res.conversationId) {
-            this.conversationID = res.conversationId;
-        }
-        if (res.parentMessageId) {
-            this.parentMessageID = res.parentMessageId;
-        }
 
         if (res.response) {
             return res.response;
@@ -51,14 +38,18 @@ const conversation = new Conversation();
 app.post('/', async (req, res) => {
     try {
         const rawReply = await oraPromise(
-            conversation.sendMessage(req.body.message),
+            conversation.sendMessage(
+                req.body.message,
+                req.body.parentMessageId
+            ),
             {
                 text: req.body.message,
+                parentMessageId: req.body.parentMessageId,
             }
         );
         const reply = await Config.parse(rawReply.text);
         console.log(`----------\n${reply}\n----------`);
-        res.json({ reply });
+        res.json({ reply, id: rawReply.parentMessageId });
     } catch (error) {
         console.log(error);
         res.status(500);

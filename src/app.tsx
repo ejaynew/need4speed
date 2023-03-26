@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import './app.css';
 import { WelcomeMessage } from './components/welcome-message';
 
 function App() {
     const [message, setMessage] = useState('Hello! How can I help you today?');
     const [userInput, setUserInput] = useState('');
+    const parentMessageId = useRef();
 
     return (
         <>
@@ -39,11 +40,16 @@ function App() {
                                 headers: {
                                     'Content-Type': 'application/json',
                                 },
-                                body: JSON.stringify({ message: userInput }),
+                                body: JSON.stringify({
+                                    message: userInput,
+                                    parentMessageId: parentMessageId.current,
+                                }),
                             })
                                 .then((response) => response.json())
                                 .then(async (data) => {
-                                    console.log(data);
+                                    if (data.id) {
+                                        parentMessageId.current = data.id;
+                                    }
                                     setMessage(data.reply);
                                 })
                                 .catch((error) => {
