@@ -10,7 +10,7 @@
     "prepare": "husky install",
     "dev": "webpack --config webpack/webpack.dev.js --watch",
     "server": "node server.mjs",
-    "start": "concurrently \"npm run server\" \"npm run watch\""
+    "start": "concurrently \"npm run server\" \"npm run dev\""
   },
   "repository": {
     "type": "git",
