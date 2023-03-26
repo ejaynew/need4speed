@@ -17,12 +17,12 @@ function App() {
                 <div id="chat-message">
                     {messages.map((msg, idx) => {
                         return (
-                            <>
-                                <p>{msg}</p>
+                            <React.Fragment key={`conv-${idx}`}>
+                                <p>Assistant: {msg}</p>
                                 {idx < previousInputs.length && (
-                                    <p>{previousInputs[idx]}</p>
+                                    <p>You: {previousInputs[idx]}</p>
                                 )}
-                            </>
+                            </React.Fragment>
                         );
                     })}
                 </div>
