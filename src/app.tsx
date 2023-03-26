@@ -71,7 +71,7 @@ function App() {
                                 })
                                 .catch((error) => {
                                     alert(
-                                        "Error. Make sure you're running the server by following the instructions on https://github.com/gragland/chatgpt-chrome-extension. Also make sure you don't have an adblocker preventing requests to localhost:3000."
+                                        "Error. Make sure you're running the server by using `npm run server`. Also make sure you don't have an adblocker preventing requests to localhost:3000."
                                     );
                                     throw new Error(error);
                                 });
