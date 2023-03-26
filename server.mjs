@@ -9,8 +9,14 @@ dotenv.config();
 
 const app = express().use(cors()).use(bodyParser.json());
 
+// gpt-3.5-turbo-0301
+// https://platform.openai.com/docs/api-reference/chat/create
 const gptApi = new ChatGPTAPI({
     apiKey: process.env.API_KEY,
+    // completionParams: {
+    //     temperature: 0.5,
+    //     top_p: 0.8,
+    // },
 });
 
 const Config = configure(config);
