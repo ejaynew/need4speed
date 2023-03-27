@@ -1,8 +1,6 @@
 import React, { useRef, useState } from 'react';
 import './app.css';
 import { WelcomeMessage } from './components/welcome-message';
-import Container from 'react-bootstrap/Container';
-import Button from 'react-bootstrap/Button';
 
 function App() {
     const [messages, setMessages] = useState([
@@ -15,7 +13,7 @@ function App() {
     return (
         <>
             <WelcomeMessage />
-            <Container className="container" id="chat-output">
+            <div className="container" id="chat-output">
                 <div id="chat-message">
                     {messages.map((msg, idx) => {
                         return (
@@ -45,10 +43,10 @@ function App() {
                         );
                     })}
                 </div>
-            </Container>
+            </div>
 
-            <div className="d-flex flex-row">
-                <form id="chat-form">
+            <div className="d-flex flex-row justify-content-start mb-4">
+                <form className="col-md" id="chat-form">
                     <input
                         type="text"
                         id="user-message"
@@ -58,9 +56,10 @@ function App() {
                         onChange={(event) => {
                             setUserInput(event.target.value);
                         }}
-                    />
-                    <Button
-                        className="btn btn-info"
+                    ></input>
+                    <button
+                        id="send-btn"
+                        className="col-md btn btn-info"
                         onClick={(event) => {
                             event.preventDefault();
                             console.log('test', userInput);
@@ -95,8 +94,8 @@ function App() {
                                 });
                         }}
                     >
-                        Send
-                    </Button>
+                        <img id="icon-send" src="iconsend.png"></img>
+                    </button>
                 </form>
             </div>
         </>
