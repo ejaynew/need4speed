@@ -2,13 +2,22 @@ import * as dotenv from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import fs from 'fs';
+import https from 'https';
 import { ChatGPTAPI } from 'chatgpt';
 import { oraPromise } from 'ora';
 import config from './config.js';
 dotenv.config();
 
-const app = express().use(cors()).use(bodyParser.json());
+const key = fs.readFileSync('./.cert/key.pem');
+const cert = fs.readFileSync('./.cert/cert.pem');
+const options = {
+    key: key,
+    cert: cert,
+};
 
+const app = express().use(cors()).use(bodyParser.json());
+const server = https.createServer(options, app);
 // gpt-3.5-turbo-0301
 // https://platform.openai.com/docs/api-reference/chat/create
 const gptApi = new ChatGPTAPI({
@@ -22,6 +31,8 @@ const gptApi = new ChatGPTAPI({
 const Config = configure(config);
 
 class Conversation {
+    messageId = '';
+
     async sendMessage(msg, parentMessageId) {
         const res = await gptApi.sendMessage(
             msg,
@@ -46,11 +57,12 @@ app.post('/', async (req, res) => {
         const rawReply = await oraPromise(
             conversation.sendMessage(
                 req.body.message,
-                req.body.parentMessageId
+                req.body.parentMessageId || conversation.messageId
             ),
             {
                 text: req.body.message,
-                parentMessageId: req.body.parentMessageId,
+                parentMessageId:
+                    req.body.parentMessageId || conversation.messageId,
             }
         );
         const reply = await Config.parse(rawReply.text);
@@ -67,7 +79,7 @@ async function start() {
         text: `Training ChatGPT (${Config.rules.length} plugin rules)`,
     });
     await oraPromise(
-        new Promise((resolve) => app.listen(3000, () => resolve())),
+        new Promise((resolve) => server.listen(3000, () => resolve())),
         {
             text: `You may now use the extension`,
         }
@@ -89,14 +101,18 @@ function configure({ plugins, ...opts }) {
     }
 
     // Send ChatGPT a training message that includes all plugin rules
-    const train = () => {
+    const train = async () => {
         if (!rules.length) return;
 
         const message = `
       Please follow these rules when replying to me:
       ${rules.map((rule) => `\n- ${rule}`)}
     `;
-        return conversation.sendMessage(message);
+
+        const result = await conversation.sendMessage(message);
+        conversation.messageId = result.detail.id;
+        console.log(result);
+        return result;
     };
 
     // Run the ChatGPT response through all plugin parsers

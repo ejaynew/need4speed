@@ -8,9 +8,9 @@
         "clean": "rimraf dist",
         "style": "prettier --write \"src/**/*.{ts,tsx}\"",
         "prepare": "husky install",
-        "dev": "cross-env PORT=8080 react-scripts start",
+        "dev": "cross-env HTTPS=true SSL_CRT_FILE=./.cert/cert.pem SSL_KEY_FILE=./.cert/key.pem PORT=8080 react-scripts start",
         "watch": "npm-watch",
-        "server": "node server.mjs",
+        "server": "HTTPS=true SSL_CRT_FILE=./.cert/cert.pem SSL_KEY_FILE=./.cert/key.pem node server.mjs",
         "start": "concurrently \"npm run server\" \"npm run watch\"",
         "web": "concurrently \"npm run server\" \"npm run dev\""
     },
@@ -38,6 +38,7 @@
         "npm-watch": "^0.11.0",
         "ora": "^6.1.2",
         "react": "^18.2.0",
+        "react-bootstrap": "^2.7.2",
         "react-dom": "^18.2.0",
         "react-scripts": "^5.0.1"
     },
