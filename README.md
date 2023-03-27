@@ -14,3 +14,4 @@
 -   node installed, preferably v18+
 -   have an openAI API key
 -   have setup certificates for running servers over `https` for local development (`.cert/cert.pem`, `.cert/key.pem`)
+-   the self signed certs can be set up using `mk-cert`
