@@ -1,0 +1,3 @@
+Adam is a researcher at NCI. He is new in his career. He wants to research faster. He has a hard time meeting deadlines. He is 27. 
+
+The client is NCI and The potential product is a tool to help Adam complete research quicker. He currently relies on a large database available at NCI. He has a hard time parsing through all of the articles. Adam has a degree from Harvard. This is his 3rd year working here. He likes researching lymphoma. He expects the product to help him complete research faster and provide quick and easy to read summaries.
