@@ -66,3 +66,23 @@
 .input-box {
     margin: 20px;
 }
+
+.choices-button {
+    border-radius: 20px;
+    margin: 5px;
+}
+
+.choices-button:hover:not([disabled]) {
+    background-color: transparent;
+    color: #212529;
+    border-color: #079fff;
+}
+
+.choices-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 columns with equal width */
+    grid-template-rows: repeat(5, 1fr); /* 5 rows with equal height */
+    gap: 10px; /* add a 10px gap between grid items */
+    margin-left: 10px;
+    margin-right: 10px;
+}

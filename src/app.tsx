@@ -5,12 +5,27 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { WelcomeMessage } from './components/welcome-message';
 
+const choices = [
+    'Consumer Products',
+    'Financial Services',
+    'Public Sector',
+    'State and Local',
+    'Transportation',
+    'Energy',
+    'Health',
+    'Retail',
+    'TMT',
+    'Travel & Hospitality',
+];
+
 function App() {
     const [messages, setMessages] = useState([
-        "Hello! I'm here to help you write your user journeys. Please answer a few questions to get started.\n\n\n\nFirst of all, what type of client is the user journey for?",
+        'Hey, Ka. Need some help writing your user journey? Please answer some questions to get started.',
+        'What type of client is this user journey for?',
     ]);
     const [previousInputs, setPreviousInputs] = useState<string[]>([]);
     const [userInput, setUserInput] = useState('');
+    const [isFirstRun, setIsFirstRun] = useState(true);
     const parentMessageId = useRef();
 
     const sendMessage = (event: any) => {
@@ -76,13 +91,84 @@ function App() {
                                         </p>
                                     </div>
                                 </div>
-                                {idx < previousInputs.length && (
-                                    <div className="user-message-wrapper">
-                                        <p className="user-message">
-                                            {previousInputs[idx]}
-                                        </p>
+                                {idx === 1 && (
+                                    <div className="choices-grid">
+                                        {choices.map((vertical) => {
+                                            return (
+                                                <Button
+                                                    disabled={!isFirstRun}
+                                                    variant="outline-dark"
+                                                    className="choices-button"
+                                                    onClick={() => {
+                                                        fetch(
+                                                            'https://localhost:3000',
+                                                            {
+                                                                method: 'POST',
+                                                                headers: {
+                                                                    'Content-Type':
+                                                                        'application/json',
+                                                                },
+                                                                body: JSON.stringify(
+                                                                    {
+                                                                        message: `The client for this user journey is ${vertical}`,
+                                                                        parentMessageId:
+                                                                            parentMessageId.current,
+                                                                    }
+                                                                ),
+                                                            }
+                                                        )
+                                                            .then((response) =>
+                                                                response.json()
+                                                            )
+                                                            .then(
+                                                                async (
+                                                                    data
+                                                                ) => {
+                                                                    if (
+                                                                        data.id
+                                                                    ) {
+                                                                        parentMessageId.current =
+                                                                            data.id;
+                                                                    }
+                                                                    setMessages(
+                                                                        (
+                                                                            msg
+                                                                        ) => {
+                                                                            return [
+                                                                                ...msg,
+                                                                                data.reply,
+                                                                            ];
+                                                                        }
+                                                                    );
+                                                                    setIsFirstRun(
+                                                                        false
+                                                                    );
+                                                                }
+                                                            )
+                                                            .catch((error) => {
+                                                                alert(
+                                                                    "Error. Make sure you're running the server by using `npm run server`. Also make sure you don't have an adblocker preventing requests to localhost:3000."
+                                                                );
+                                                                throw new Error(
+                                                                    error
+                                                                );
+                                                            });
+                                                    }}
+                                                >
+                                                    {vertical}
+                                                </Button>
+                                            );
+                                        })}
                                     </div>
                                 )}
+                                {idx - 1 >= 0 &&
+                                    idx - 1 < previousInputs.length && (
+                                        <div className="user-message-wrapper">
+                                            <p className="user-message">
+                                                {previousInputs[idx - 1]}
+                                            </p>
+                                        </div>
+                                    )}
                             </React.Fragment>
                         );
                     })}
@@ -92,6 +178,7 @@ function App() {
             <div className="input-box d-flex flex-row justify-content-start mb-4">
                 <InputGroup className="mb-3">
                     <Form.Control
+                        disabled={isFirstRun}
                         aria-label="user-input"
                         aria-describedby="chat-form"
                         value={userInput}
@@ -109,6 +196,7 @@ function App() {
                         }}
                     />
                     <Button
+                        disabled={isFirstRun}
                         style={{
                             backgroundColor: 'white',
                             borderColor: '#B4B4B4',
