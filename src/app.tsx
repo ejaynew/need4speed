@@ -161,11 +161,11 @@ function App() {
                                         })}
                                     </div>
                                 )}
-                                {idx - 1 >= 0 &&
-                                    idx - 1 < previousInputs.length && (
+                                {idx - 2 >= 0 &&
+                                    idx - 2 < previousInputs.length && (
                                         <div className="user-message-wrapper">
                                             <p className="user-message">
-                                                {previousInputs[idx - 1]}
+                                                {previousInputs[idx - 2]}
                                             </p>
                                         </div>
                                     )}
